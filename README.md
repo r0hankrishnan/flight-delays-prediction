@@ -12,8 +12,7 @@ This repository contains the code and documentation for our class project: **Pre
 
 ## Data Sources
 
-- **Flight Delay Data:** U.S. Bureau of Transportation Statistics ([link](https://www.transtats.bts.gov/tables.asp?QO_VQ=EFD&QO_anzr=Nv4yv0r)), multi-year records for Philadelphia International Airport.
-    - Currently using kaggle data from 2009-2013 as a placeholder ([link](https://www.kaggle.com/datasets/yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018))
+- **Flight Delay Data:** Scraped from the U.S. Bureau of Transportation Statistics ([link](https://www.transtats.bts.gov/tables.asp?QO_VQ=EFD&QO_anzr=Nv4yv0r)) flight delay data.
 - **Weather Data:** OpenWeather API ([link](https://openweathermap.org/api/one-call-3#history_daily_aggregation)), daily weather conditions matched to flight dates.
 - **Airport Location Data**:
 
