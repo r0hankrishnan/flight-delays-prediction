@@ -209,5 +209,10 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
+.DS_Store
+
 # Datasets (too big)
-*.csv
+/data/raw
+/ost_scraped
+/data/intermediate
+/data/processed/*.csv
