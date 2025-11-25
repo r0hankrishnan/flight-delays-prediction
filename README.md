@@ -13,8 +13,8 @@ This repository contains the code and documentation for our class project: **Pre
 ## Data Sources
 
 - **Flight Delay Data:** Scraped from the U.S. Bureau of Transportation Statistics ([link](https://www.transtats.bts.gov/tables.asp?QO_VQ=EFD&QO_anzr=Nv4yv0r)) flight delay data.
-- **Weather Data:** OpenWeather API ([link](https://openweathermap.org/api/one-call-3#history_daily_aggregation)), daily weather conditions matched to flight dates.
-- **Airport Location Data**:
+- **Weather Data:** OpenMeto Historical Weather API ([link]([https://openweathermap.org/api/one-call-3#history_daily_aggregation](https://open-meteo.com/en/docs/historical-weather-api))), daily weather conditions matched to flight dates.
+- **Airport Location Data**: Compiled airport location and demogrpahic data from IP2Location ([link](https://github.com/ip2location/ip2location-iata-icao))
 
 ## Objective
 
