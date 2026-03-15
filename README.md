@@ -1,6 +1,6 @@
 # Flight Delay Risk Scoring for Incoming Flights to PHL
 
-Predicting whether inbound flights to Philadelphia International Airport (PHL) will arrive **more than 15 minutes late** using historical BTS flight records, airport metadata, and origin/destination weather features.
+Predicting whether inbound flights to Philadelphia International Airport (PHL) will arrive **more than 15 minutes late** using historical BTS flight records, airport metadata, and origin/destination weather features. [**Check out the demo analytics triage dashboard here**](https://phl-delay-prediction.streamlit.app/)!
 
 ## Why this project matters
 
