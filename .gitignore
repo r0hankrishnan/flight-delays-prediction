@@ -212,7 +212,12 @@ __marimo__/
 .DS_Store
 
 # Datasets (too big)
-/data/raw
-/ost_scraped
-/data/intermediate
-/data/processed/*.csv
+data/raw/*
+!data/raw/.gitkeep
+data/external/bts_zip_files
+data/external/weather/*
+data/external/flights/*
+!data/external/.gitkeep
+
+# Big class notebook
+class/CIS_5450_Final_Project.ipynb
