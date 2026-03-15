@@ -1,34 +1,134 @@
-# Flight Delay Prediction at Philadelphia International Airport
+# Flight Delay Risk Scoring for Incoming Flights to PHL
 
-## Project Overview
+Predicting whether inbound flights to Philadelphia International Airport (PHL) will arrive **more than 15 minutes late** using historical BTS flight records, airport metadata, and origin/destination weather features.
 
-This repository contains the code and documentation for our class project: **Predicting Flight Delays at Philadelphia International Airport**. Our team will build a data-driven model to estimate the likelihood of flight delays, helping airport administrators optimize operations and improve efficiency.
+## Why this project matters
 
-## Team
+Flight delays are expensive and operationally disruptive. This project explores whether historical flight and weather data can be used to identify incoming flights at elevated risk of delay, with the goal of supporting **airport operations prioritization** rather than fully automated decision-making. 
 
-- **Arnav Chatani** 
-- **Hellen Jin** 
-- **Rohan Krishnan** 
+## Problem statement
 
-## Data Sources
+Given information known before arrival, estimate the probability that an incoming flight to PHL will be meaningfully delayed.
 
-- **Flight Delay Data:** Scraped from the U.S. Bureau of Transportation Statistics ([link](https://www.transtats.bts.gov/tables.asp?QO_VQ=EFD&QO_anzr=Nv4yv0r)) flight delay data.
-- **Weather Data:** OpenMeto Historical Weather API ([link](https://open-meteo.com/en/docs/historical-weather-api)), daily weather conditions matched to flight dates.
-- **Airport Location Data**: Compiled airport location and demogrpahic data from IP2Location ([link](https://github.com/ip2location/ip2location-iata-icao))
+**Target definition**
 
-## Objective
+* `IsDelayed = 1` if arrival delay > 15 minutes
+* `IsDelayed = 0` otherwise
 
-Acting as data science consultants, our goal is to build a predictive model that flags flights at high risk of delay. This will help Philadelphia International Airport administrators optimize passenger flow and resource allocation, especially in light of recent FAA funding reductions and the significant costs associated with delays.
+This is an imbalanced classification problem:
 
-## Modeling Approach
+* **80.8%** of flights arrived within 15 minutes
+* **19.2%** arrived more than 15 minutes late 
 
-We will explore several classification models, including:
-    - TBD
+Because of that class imbalance, this project emphasizes **recall, precision, F1, ranking quality, and threshold analysis** rather than headline accuracy alone.
 
-The target variable will be an indicator for meaningful delays, engineered from the `arr_delay` column.
+## Key findings
 
-## Anticipated Challenges
+### 1. Accuracy is a weak metric here
 
-- Managing and cleaning large, multi-year datasets.
-- Integrating weather data via API calls and joining with flight records.
-- Addressing inconsistencies in government-aggregated data.
+Because only about 19% of flights are delayed, a naive model can look “accurate” by predicting mostly on-time flights. The class imbalance makes recall, precision, F1, and ranking metrics much more informative than raw accuracy. 
+
+### 2. Daily weather data was less useful than expected
+
+Our analysis found that daily weather features were not strong enough on their own to drive highly effective delay prediction. The notebook’s conclusion explicitly notes that **daily aggregated weather may not be granular enough** for this task. 
+
+### 3. Origin conditions appeared more informative than destination conditions
+
+In simple correlation analysis, origin-airport weather features showed somewhat stronger relationships with delay than destination features, though those relationships were still modest. 
+
+### 4. PCA did not materially improve the weather-based signal
+
+A PCA experiment on weather variables did not meaningfully improve recall for the weighted logistic regression pipeline, suggesting that the limiting factor was likely the underlying signal in the data rather than just multicollinearity in weather features.
+
+### 5. The project is more convincing as decision support than automation
+
+The class notebook concluded that the final models were **not strong enough for real deployment at PHL** and that richer, more granular data would likely be required. That is a useful practical takeaway: this project is best understood as a risk-scoring / prioritization exercise, not a production-ready airport automation system. 
+
+## Main takeaway
+
+This project demonstrates a realistic machine learning workflow on a difficult operational problem:
+
+* assembling multi-source transportation data
+* engineering usable features from flight and weather records
+* evaluating under class imbalance
+* interpreting model limitations honestly
+* reframing outputs as **risk ranking** rather than overclaiming binary certainty
+
+The strongest lesson was not that “weather predicts delays well,” but that **data granularity matters**. Daily airport-level weather was too coarse to fully capture the operational conditions driving delay outcomes. Personally, the reframing of the problem away from pure predictive accuracy to risk-ranking to provide support to current operations was a great teaching moment about how ML can **actually** fit into modern workflows/processes.
+
+## Data
+
+This project combines multiple sources:
+
+* [**BTS flight records**](https://www.transtats.bts.gov/tables.asp?QO_VQ=EFD&QO_anzr=Nv4yv0r) for U.S. flights inbound to PHL
+* [**Open-Meteo daily weather**](https://open-meteo.com/en/docs/historical-weather-api) for both origin and destination airports
+* [**Supporting airport / airline lookup data**](https://github.com/ip2location/ip2location-iata-icao) for enrichment and visualization
+
+Below is a diagram displaying the relationships between the various data sources used:
+
+![ERD-diagram](./assets/flight_delay_ERD.png)
+
+## Modeling approach
+
+I evaluated multiple classification approaches, including:
+
+* weighted logistic regression
+* decision tree classifier
+* random forest classifier
+* XGBoost 
+
+The workflow includes:
+
+* preprocessing and joining multi-source flight and weather data
+* feature engineering on temporal and weather variables
+* handling mixed categorical / numeric inputs with encoding pipelines
+* comparing models under class imbalance
+* threshold analysis to understand precision-recall tradeoffs
+* exploratory top-k / ranking-style evaluation for operational use
+
+After some research, I landed on average precision as a key evaluation/comparison metric because it specifically indicates how strong a model's precision is across recall values. A higher average precision indicates higher precision and recall and also indicates that the model surfaces true class labels with higher probabilites. This metric was useful in finding a model that could effectively rank the inputted flights by delay risk.
+
+I also examined the final, tuned model's precision @ k for k values of 10, 20, 50, 100, 250, 500, 1000, 10000, and 100000. The model showed strong ranking ability up to k values of 500 (96%).
+
+## Repo structure
+
+```text
+notebooks/                analysis and modeling workflow
+src/                      reusable data, feature, training, and inference code
+scripts/                  some scripts that automatically complete parts of the project (scraping, API calls, training)
+artifacts/                saved trained pipeline(s)
+app/                      FastAPI backend example + streamlit frontend example
+data/external/inference   example batch input for scoring
+class/                    jupyter notebook originally submitted for class project
+references/                flight data column information
+```
+
+## Running the project
+Install the requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+The best/easiest way to interact with the project is via the streamlit app:
+
+```bash
+streamlit run app/frontend/app.py
+```
+
+You can also view a demo of a FastAPI endpoint:
+
+```bash
+uvicorn app.backend.main:app
+```
+
+Feel free to look through the notebooks for a simple walkthrough of the cleaning and training processes. The class notebooks contain the more extensive EDA originally conducted if needed. 
+
+
+## Future improvements
+
+The notebook identifies several natural next steps:
+
+* add richer operational datasets
+* use more granular weather inputs, ideally hourly or route-aware
+* improve the final deployment-oriented scoring workflow 
