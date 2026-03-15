@@ -221,3 +221,7 @@ data/external/flights/*
 
 # Big class notebook
 class/CIS_5450_Final_Project.ipynb
+
+# Planning docs
+pin.md
+tasks.md 
