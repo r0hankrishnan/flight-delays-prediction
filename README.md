@@ -22,6 +22,20 @@ This is an imbalanced classification problem:
 
 Because of that class imbalance, this project emphasizes **recall, precision, F1, ranking quality, and threshold analysis** rather than headline accuracy alone.
 
+## Main takeaway
+
+This project demonstrates a realistic machine learning workflow on a difficult operational problem:
+
+* assembling multi-source transportation data
+* engineering usable features from flight and weather records
+* evaluating under class imbalance
+* interpreting model limitations honestly
+* reframing outputs as **risk ranking** rather than overclaiming binary certainty
+
+The strongest lesson was not that “weather predicts delays well,” but that **data granularity matters**. Daily airport-level weather was too coarse to fully capture the operational conditions driving delay outcomes. Personally, the reframing of the problem away from pure predictive accuracy to risk-ranking to provide support to current operations was a great teaching moment about how ML can **actually** fit into modern workflows/processes.
+
+Ultimately, the finalized XG Boost pipeline showed strong performance and a high potential to be a useful delay-risk-ranker to support daily scheduling and passenger management operations at Philedelphia International Airport. 
+
 ## Key findings
 
 ### 1. Accuracy is a weak metric here
@@ -43,18 +57,6 @@ A PCA experiment on weather variables did not meaningfully improve recall for th
 ### 5. The project is more convincing as decision support than automation
 
 The class notebook concluded that the final models were **not strong enough for real deployment at PHL** and that richer, more granular data would likely be required. That is a useful practical takeaway: this project is best understood as a risk-scoring / prioritization exercise, not a production-ready airport automation system. 
-
-## Main takeaway
-
-This project demonstrates a realistic machine learning workflow on a difficult operational problem:
-
-* assembling multi-source transportation data
-* engineering usable features from flight and weather records
-* evaluating under class imbalance
-* interpreting model limitations honestly
-* reframing outputs as **risk ranking** rather than overclaiming binary certainty
-
-The strongest lesson was not that “weather predicts delays well,” but that **data granularity matters**. Daily airport-level weather was too coarse to fully capture the operational conditions driving delay outcomes. Personally, the reframing of the problem away from pure predictive accuracy to risk-ranking to provide support to current operations was a great teaching moment about how ML can **actually** fit into modern workflows/processes.
 
 ## Data
 
