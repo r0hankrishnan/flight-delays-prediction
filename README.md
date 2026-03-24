@@ -1,10 +1,31 @@
 # Flight Delay Risk Scoring for Incoming Flights to PHL
 
-Predicting whether inbound flights to Philadelphia International Airport (PHL) will arrive **more than 15 minutes late** using historical BTS flight records, airport metadata, and origin/destination weather features. [**Check out the demo analytics triage dashboard here**](https://phl-delay-prediction.streamlit.app/)!
+Rank inbound flights to Philadelphia International Airport (PHL) by the probability that they will arrive **more than 15 minutes late** using historical BTS flight records, airport metadata, and origin/destination weather features. [**Check out the demo analytics triage dashboard here**](https://phl-delay-prediction.streamlit.app/)!
 
 ## Why this project matters
 
 Flight delays are expensive and operationally disruptive. This project explores whether historical flight and weather data can be used to identify incoming flights at elevated risk of delay, with the goal of supporting **airport operations prioritization** rather than fully automated decision-making. 
+
+## Running the project
+Install the requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+The best/easiest way to interact with the project is via the streamlit app. You can view the streamlit app on the web [here](https://phl-delay-prediction.streamlit.app/) or run it locally:
+
+```bash
+streamlit run app/frontend/app.py
+```
+
+You can also view a demo of a FastAPI endpoint for the ranking process:
+
+```bash
+uvicorn app.backend.main:app
+```
+
+Feel free to look through the notebooks for a simple walkthrough of the cleaning and training processes. The class notebooks contain the more extensive EDA originally conducted (if needed). 
 
 ## Problem statement
 
@@ -54,9 +75,9 @@ In simple correlation analysis, origin-airport weather features showed somewhat 
 
 A PCA experiment on weather variables did not meaningfully improve recall for the weighted logistic regression pipeline, suggesting that the limiting factor was likely the underlying signal in the data rather than just multicollinearity in weather features.
 
-### 5. The project is more convincing as decision support than automation
+### 5. The project is more convincing as decision support tool than it is as a full automation
 
-The class notebook concluded that the final models were **not strong enough for real deployment at PHL** and that richer, more granular data would likely be required. That is a useful practical takeaway: this project is best understood as a risk-scoring / prioritization exercise, not a production-ready airport automation system. 
+The final model was **not strong enough to be deployed as an automated binary classification tool at PHL**. Rather, its best performance came from its ability to **rank** flights and direct operational attention. This project is best understood as a risk-socring / prioritization exercise, not a production-ready automated passenger-routing system. 
 
 ## Data
 
@@ -104,28 +125,6 @@ data/external/inference   example batch input for scoring
 class/                    jupyter notebook originally submitted for class project
 references/                flight data column information
 ```
-
-## Running the project
-Install the requirements:
-
-```bash
-pip install -r requirements.txt
-```
-
-The best/easiest way to interact with the project is via the streamlit app:
-
-```bash
-streamlit run app/frontend/app.py
-```
-
-You can also view a demo of a FastAPI endpoint:
-
-```bash
-uvicorn app.backend.main:app
-```
-
-Feel free to look through the notebooks for a simple walkthrough of the cleaning and training processes. The class notebooks contain the more extensive EDA originally conducted if needed. 
-
 
 ## Future improvements
 
